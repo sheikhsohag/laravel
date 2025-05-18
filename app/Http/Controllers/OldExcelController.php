@@ -19,7 +19,6 @@ class ExcelController extends Controller
         // Set initial memory and time limits
         ini_set('memory_limit', self::MEMORY_LIMIT);
         set_time_limit(self::PROCESSING_TIMEOUT);
-
         try {
             // Validate the incoming request has an Excel file
             $request->validate([
@@ -39,15 +38,18 @@ class ExcelController extends Controller
             $reader->open($file->getPathname());
             
             $chunkFiles = [];
-            $chunkSize = 300;
+            $chunkSize = 1000;
             $chunkIndex = 0;
             $rowIndex = 0;
             $header = null;
             $currentChunk = [];
+            $columnname = [];
             
             foreach ($reader->getSheetIterator() as $sheet) {
                 foreach ($sheet->getRowIterator() as $row) {
                     // Check memory and time limits periodically
+
+                    
                     if ($rowIndex % 100 === 0) {
                         $this->checkTimeLimit();
                         $this->checkMemoryUsage();
@@ -92,7 +94,8 @@ class ExcelController extends Controller
                 'total_rows' => $rowIndex - 1,
                 'message' => 'File successfully chunked and stored',
                 'processing_time' => microtime(true) - LARAVEL_START,
-                'memory_usage' => round(memory_get_peak_usage(true) / 1024 / 1024, 2) . 'MB'
+                'memory_usage' => round(memory_get_peak_usage(true) / 1024 / 1024, 2) . 'MB',
+                'header'=>$header
             ]);
 
         } catch (UnsupportedTypeException $e) {

@@ -26,7 +26,7 @@ return [
     |
     | Drivers: "sync", "database", "beanstalkd", "sqs", "redis", "null"
     |
-    */
+    */ 
 
     'connections' => [
 
@@ -108,5 +108,29 @@ return [
         'database' => env('DB_CONNECTION', 'sqlite'),
         'table' => 'failed_jobs',
     ],
+
+    'excel_imports' => [
+    'driver' => 'database',
+    'connection' => 'mysql', // Should match your primary database connection
+    'table' => 'jobs', // Laravel's default jobs table
+    'queue' => 'excel_imports', // Queue name must match what you use in jobs
+    'retry_after' => 3600, // 1 hour timeout (matches job timeout)
+    'after_commit' => false, // Important for long-running jobs
+    
+    // Additional recommended parameters
+    'batch' => [ // Required for job batching
+        'table' => 'job_batches', 
+    ],
+    'failed' => [ // Essential for failure tracking
+        'driver' => 'database-uuids',
+        'database' => 'mysql',
+        'table' => 'failed_jobs',
+    ],
+    // MySQL-specific optimizations
+    'options' => [
+        PDO::MYSQL_ATTR_LOCAL_INFILE => true, // Faster bulk inserts
+        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false, // Reduce memory
+    ],
+],
 
 ];

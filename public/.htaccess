@@ -3,6 +3,12 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    # PHP Configuration - Add these new lines
+    php_value upload_max_filesize 256M
+    php_value post_max_size 257M
+    php_value memory_limit 512M
+    php_value max_execution_time 300
+
     RewriteEngine On
 
     # Handle Authorization Header
