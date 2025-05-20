@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\MailController;
 use Box\Spout\Common\Entity\Row;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,4 +20,8 @@ Route::prefix('excel')->group(function(){
 Route::prefix('file')->group(function(){
     Route::post('/', [ImageController::class, 'store']);
     Route::post('/{id}', [ImageController::class, 'show']);
+});
+
+Route::prefix('send-mail')->group(function(){
+    Route::post('/', [MailController::class, 'sendMail']);
 });
