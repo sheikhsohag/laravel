@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\CustomMessageMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
+use App\Notifications\testMailNotification;
 
 class MailController extends Controller
 {
@@ -14,7 +16,11 @@ class MailController extends Controller
             'email'=>'required|email'
         ]);
 
-        Mail::to($request->input('email'))->send(new CustomMessageMail($request->input('message')));
+        // Mail::to($request->input('email'))->send(new CustomMessageMail($request->input('message')));
+        $user = User::find(1);
+
+        $user->notify(new testMailNotification());
+
 
         return response()->json([
             'success' => true,
