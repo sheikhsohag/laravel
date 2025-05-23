@@ -26,7 +26,7 @@ class testMailNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail','database'];
     }
 
     /**
@@ -40,6 +40,15 @@ class testMailNotification extends Notification implements ShouldQueue
               "testMessage"=>"test massage"
            ]);
     }
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'subject' => 'test message',
+            'message' => 'This is a test notification stored in DB',
+        ];
+    }
+
 
     /**
      * Get the array representation of the notification.

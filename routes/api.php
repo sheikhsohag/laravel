@@ -3,6 +3,7 @@
 use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\NotificationController;
 use Box\Spout\Common\Entity\Row;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,8 @@ Route::prefix('file')->group(function(){
 
 Route::prefix('send-mail')->group(function(){
     Route::post('/', [MailController::class, 'sendMail']);
+});
+Route::prefix('notification')->group(function(){
+    Route::post('/{user_id}', [NotificationController::class, 'readNotification']);
+    Route::post('/{user_id}/{notification_id}', [NotificationController::class, 'markAsRead']);
 });
