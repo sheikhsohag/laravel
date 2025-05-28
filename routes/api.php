@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BulkEmailController;
 use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
@@ -29,4 +30,10 @@ Route::prefix('send-mail')->group(function(){
 Route::prefix('notification')->group(function(){
     Route::post('/{user_id}', [NotificationController::class, 'readNotification']);
     Route::post('/{user_id}/{notification_id}', [NotificationController::class, 'markAsRead']);
+});
+
+Route::prefix('job')->group(function(){
+Route::post('/send-bulk-emails', [BulkEmailController::class, 'sendBulkEmails']);
+Route::get('/job-status/{jobId}', [BulkEmailController::class, 'getJobStatus']);
+Route::get('/batch-progress/{batchId}', [BulkEmailController::class, 'getBatchProgress']);
 });
