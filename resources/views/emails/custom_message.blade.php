@@ -8,7 +8,7 @@
     <p>You have received a custom message:</p>
     
     <div style="background: #f5f5f5; padding: 15px; border-radius: 5px;">
-        {{ $messageContent }}
+        {{ $emailMessage }}
     </div>
     
     <p>Thank you for using our service!</p>

@@ -49,6 +49,7 @@ class SendBulkEmail implements ShouldQueue
         } catch (\Exception $e) {
             EmailLog::create([
                 'email_job_id' => $this->jobRecord->id,
+     
                 'recipient_email' => $this->emailData['to'],
                 'status' => 'failed',
                 'error_message' => $e->getMessage(),
