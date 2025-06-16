@@ -7,13 +7,13 @@
 </head>
 <body>
 
-    @include('layouts.navbar')  <!-- ✅ Correct include -->
+    @include('layouts.navbar') 
 
     <div class="content">
         @yield('content')
     </div>
 
-    @include('layouts.footer')  <!-- ✅ Correct include -->
+    @include('layouts.footer') 
 
 </body>
 </html>
