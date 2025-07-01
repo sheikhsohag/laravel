@@ -139,6 +139,17 @@ username: 'sohag'
     <div class="modal">This is a modal</div>
     </template>
 
+     
+    <!-- magic functions -->
+
+    <button class="bg-red-400" @click="$el.innerHTML = 'Hello World!'">Replace me with "Hello World!"</button>
+
+    <div x-data="{ open: false }" x-init="$watch('open', value => console.log(value))">
+        <button @click="open = ! open">Toggle Open</button>
+    </div>
+
+
+
     </body>
 
 
