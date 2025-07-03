@@ -5,9 +5,13 @@ use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ServiceContainer\ExampleController;
+use App\Http\Controllers\ServiceContainer\UserController;
+use App\Providers\SmsServiceProvider;
 use Box\Spout\Common\Entity\Row;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -36,4 +40,10 @@ Route::prefix('job')->group(function(){
 Route::post('/send-bulk-emails', [BulkEmailController::class, 'sendBulkEmails']);
 Route::get('/job-status/{jobId}', [BulkEmailController::class, 'getJobStatus']);
 Route::get('/batch-progress/{batchId}', [BulkEmailController::class, 'getBatchProgress']);
+});
+
+
+Route::prefix('sc')->group( function () {
+Route::get('/', [ExampleController::class, 'index']);
+Route::get('/register', [UserController::class, 'register']);
 });

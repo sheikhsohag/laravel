@@ -13,4 +13,4 @@ class AlpineJsController extends Controller
 
         return view('webView.alpine', ["data"=>$data]);
     }
-}
+}`
