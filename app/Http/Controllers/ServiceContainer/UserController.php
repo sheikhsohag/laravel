@@ -21,7 +21,7 @@ class UserController extends Controller
     {
         // ... user registration logic ...
 
-        $userPhone = $request->input('phone');
+        $userPhone = "1234567890";
         $verificationCode = rand(1000, 9999); // Dummy code
 
         $this->smsSender->send($userPhone, "Your verification code is: " . $verificationCode);
