@@ -123,4 +123,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'default' => env('PAYMENT_DEFAULT', 'stripe'),
+    'gateways' => [
+        'stripe' => [
+            'api_key' => env('STRIPE_API_KEY'),
+        ],
+        'paypal' => [
+            'client_id' => env('PAYPAL_CLIENT_ID'),
+            'secret' => env('PAYPAL_SECRET'),
+        ],
+    ],
+
 ];

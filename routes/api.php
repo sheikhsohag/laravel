@@ -6,9 +6,11 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ServiceContainer\ExampleController;
+use App\Http\Controllers\ServiceContainer\PaymentController;
 use App\Http\Controllers\ServiceContainer\UserController;
 use App\Providers\SmsServiceProvider;
 use Box\Spout\Common\Entity\Row;
+use Faker\Provider\ar_EG\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,4 +48,6 @@ Route::get('/batch-progress/{batchId}', [BulkEmailController::class, 'getBatchPr
 Route::prefix('sc')->group( function () {
 Route::get('/', [ExampleController::class, 'index']);
 Route::get('/register', [UserController::class, 'register']);
+// Route::get('/pay', [PaymentController::class, 'pay']);
+Route::get('/pay', [PaymentController::class, 'payWithGateway']);
 });
