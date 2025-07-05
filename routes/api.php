@@ -3,6 +3,7 @@
 use App\Http\Controllers\BulkEmailController;
 use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\Macro\MacroController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ServiceContainer\ExampleController;
@@ -50,4 +51,8 @@ Route::get('/', [ExampleController::class, 'index']);
 Route::get('/register', [UserController::class, 'register']);
 // Route::get('/pay', [PaymentController::class, 'pay']);
 Route::get('/pay', [PaymentController::class, 'payWithGateway']);
+});
+
+Route::prefix('macro')->group(function () {
+    Route::get('/', [MacroController::class, 'index']);
 });
