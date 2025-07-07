@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\AnalyticsService;
+// use App\Services\AnalyticsService;
 use Illuminate\Support\ServiceProvider;
 
 class CustomMacroProvider extends ServiceProvider
@@ -20,12 +20,12 @@ class CustomMacroProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        AnalyticsService::macro('trackPurchase', function ($amount) {
-            return $this->trackEvent("purchase:{$amount}");
-        });
+        // AnalyticsService::macro('trackPurchase', function ($amount) {
+        //     return $this->trackEvent("purchase:{$amount}");
+        // });
         
-        AnalyticsService::macro('trackPageView', function ($page) {
-            return $this->trackEvent("view:{$page}");
-        });
+        // AnalyticsService::macro('trackPageView', function ($page) {
+        //     return $this->trackEvent("view:{$page}");
+        // });
     }
 }
