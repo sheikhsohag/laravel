@@ -12,7 +12,7 @@ class CategoryFactory extends Factory
         return [
             'user_id'=>User::factory(),
             'title'=>$this->faker->sentence(3),
-            'slug'=>fake()->unique()->sentence(1),
+            'slug'=>fake()->unique()->slug(),
             'description'=>fake()->sentence(5),
             'image'=>fake()->address(),
         ];
