@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BulkEmailController;
+use App\Http\Controllers\EgerLoading\EgerLoading;
 use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\Macro\MacroController;
@@ -55,4 +56,9 @@ Route::get('/pay', [PaymentController::class, 'payWithGateway']);
 
 Route::prefix('macro')->group(function () {
     Route::get('/', [MacroController::class, 'index']);
+});
+
+
+Route::prefix('eger-loading')->group(function(){
+    Route::get('/', [EgerLoading::class, 'index']);
 });
