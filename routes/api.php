@@ -7,6 +7,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\Macro\MacroController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceContainer\ExampleController;
 use App\Http\Controllers\ServiceContainer\PaymentController;
 use App\Http\Controllers\ServiceContainer\UserController;
@@ -61,4 +62,8 @@ Route::prefix('macro')->group(function () {
 
 Route::prefix('eger-loading')->group(function(){
     Route::get('/', [EgerLoading::class, 'index']);
+});
+
+Route::prefix('product')->group(function(){
+    Route::post('/', [ProductController::class, 'store']);
 });

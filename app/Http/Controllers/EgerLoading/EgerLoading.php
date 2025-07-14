@@ -7,7 +7,7 @@ use App\Models\User;
 class EgerLoading extends Controller
 {
     public function index(){
-        $user = User::select('id','name', 'email')->with('category','product')->get();
+        $user = User::select('id','name', 'email')->with('category.products')->get();
     
         return response()->json($user);
     }
