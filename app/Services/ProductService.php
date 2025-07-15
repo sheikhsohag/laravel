@@ -2,8 +2,14 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Storage;
+
 class ProductService{
     public function storeFile($file){
-       $path = 
+      $extention = $file->getClientOriginalExtension();
+      $filePath = now()->format('ymd-His') . '_' . uniqid() . '.' . $extention;
+
+      $location = Storage::disk('public')->putFileAs('/products', $file, $filePath);
+      return $location;
     }
 }

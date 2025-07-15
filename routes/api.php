@@ -64,6 +64,6 @@ Route::prefix('eger-loading')->group(function(){
     Route::get('/', [EgerLoading::class, 'index']);
 });
 
-Route::prefix('product')->group(function(){
+Route::prefix('products')->group(function(){
     Route::post('/', [ProductController::class, 'store']);
 });

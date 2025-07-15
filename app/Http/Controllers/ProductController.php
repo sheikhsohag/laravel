@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
+use App\Models\Product;
 use App\Services\ProductService;
 
 class ProductController extends Controller
@@ -18,5 +19,10 @@ class ProductController extends Controller
         {
             $path = $this->productService->storeFile($data['image']);
         }
+
+        $product = Product::create($data);
+        $product->image = $path;
+        $product->save();
+        return response()->json($product);
     }
 }
