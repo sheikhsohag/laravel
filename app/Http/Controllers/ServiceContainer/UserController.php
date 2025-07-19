@@ -6,6 +6,7 @@ namespace App\Http\Controllers\ServiceContainer;
 use App\Contracts\SmsSenderInterface; // Import the interface
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -27,5 +28,15 @@ class UserController extends Controller
         $this->smsSender->send($userPhone, "Your verification code is: " . $verificationCode);
 
         return response()->json(['message' => 'User registered and SMS sent.']);
+    }
+
+
+    public function index(){
+        $users = User::all();
+        return response()->json([
+            'success'=>true,
+            'message'=>"All User Successfully Retrive.",
+            'data'=>$users
+        ]);
     }
 }
