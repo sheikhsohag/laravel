@@ -22,6 +22,10 @@ class ProductCreateListener
      */
     public function handle(ProductCreate $event): void
     {
-        Log::info($event);
+         Log::info('Product created', [
+            'product_id' => $event->product->id ?? 'unknown',
+            'event' => 'ProductCreate',
+            'details' => $event->product->toArray() ?? []
+        ]);
     }
 }

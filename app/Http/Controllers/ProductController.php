@@ -25,7 +25,7 @@ class ProductController extends Controller
         
         $product->image = $path;
         $product->save();
-        ProductCreate::dispatch();
+        ProductCreate::dispatch($product);
         return response()->json($product);
     }
 }
