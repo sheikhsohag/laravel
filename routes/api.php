@@ -25,6 +25,10 @@ Route::post('login',[AuthController::class,'login']);
 Route::post('logout',[AuthController::class,'logout'])
   ->middleware('auth:sanctum');
 
+Route::middleware('auth:sanctum')->prefix('index')->group(function(){
+    Route::post('/', [AuthController::class, 'index']);
+});
+
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
