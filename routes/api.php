@@ -17,6 +17,9 @@ use Faker\Provider\ar_EG\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
+
 
 
 
@@ -82,4 +85,14 @@ Route::prefix('eger-loading')->group(function(){
 
 Route::prefix('products')->group(function(){
     Route::post('/', [ProductController::class, 'store']);
+    Route::post('/all', [ProductController::class, 'index']);
+});
+
+
+Route::get('/cache-test', function() {
+    Cache::put('test_key', 'test_value', now()->addMinutes(10));
+    return [
+        'value' => Cache::get('test_key'),
+        'keys' => Redis::connection('cache')->keys('*')
+    ];
 });
