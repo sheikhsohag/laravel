@@ -17,6 +17,7 @@ use Faker\Provider\ar_EG\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DockerController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
@@ -96,3 +97,7 @@ Route::get('/cache-test', function() {
         'keys' => Redis::connection('cache')->keys('*')
     ];
 });
+
+Route::get('/docker', [DockerController::class, 'index']);
+
+Route::get('/docker/{id}', [DockerController::class, 'show']);

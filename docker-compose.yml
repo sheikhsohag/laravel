@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+
+  # 1. Laravel PHP Application Service (app)
+  app:
+    # Build the image using the Dockerfile we created
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sohag-laravel-app:latest # Tag the resulting image
+    container_name: laravel_app
+    restart: unless-stopped
+    # Mount the source code for development (changes instantly reflected)
+    volumes:
+      - .:/var/www/html
+    # Links the app service to the database service
+    depends_on:
+      - db
+    # Set environment variables for the application
+    environment:
+      # These must match the values in the .env file in the root
+      DB_CONNECTION: mysql
+      DB_HOST: db # IMPORTANT: Use the service name 'db' as the host
+      DB_PORT: 3306
+      DB_DATABASE: laravel_db
+      DB_USERNAME: laravel_user
+      DB_PASSWORD: supersecretpassword
+    # Specify the command to run (PHP-FPM is handled by Dockerfile CMD)
+
+  # 2. Web Server Service (nginx)
+  nginx:
+    image: nginx:alpine
+    container_name: laravel_nginx
+    restart: unless-stopped
+    # Map port 80 on the container to port 8000 on your local machine
+    ports:
+      - "8000:80"
+    # Mount the application code and custom Nginx config
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app # Ensure the PHP service is running first
+
+  # 3. Database Service (db)
+  db:
+    image: mysql:8.0
+    container_name: laravel_db_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel_db
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: supersecretpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    # Persist data using a named volume
+    volumes:
+      - dbdata:/var/lib/mysql
+    # Optional: map port 3306 to access DB from host machine (e.g., using MySQL Workbench)
+    ports:
+      - "3307:3306"
+
+# Define the named volumes
+volumes:
+  dbdata:

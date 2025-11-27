@@ -1,0 +1,15 @@
+Dependencies
+
+/node_modules
+/vendor
+
+Logs and cache
+
+/storage/.log
+/bootstrap/cache/.php
+
+Git/Environment
+
+.env
+.git
+.gitignore
