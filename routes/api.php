@@ -101,3 +101,5 @@ Route::get('/cache-test', function() {
 Route::get('/docker', [DockerController::class, 'index']);
 
 Route::get('/docker/{id}', [DockerController::class, 'show']);
+
+Route::get('/docker/{id}/edit', [DockerController::class, 'edit']);

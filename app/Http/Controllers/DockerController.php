@@ -19,4 +19,11 @@ class DockerController extends Controller
             'message' => 'Showing Docker item ' . $id
         ]);
     }
+
+    public function edit($id)
+    {
+        return response()->json([
+            'message' => 'Editing Docker item ' . $id
+        ]);
+    }
 }
