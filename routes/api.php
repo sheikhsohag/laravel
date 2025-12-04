@@ -103,3 +103,9 @@ Route::get('/docker', [DockerController::class, 'index']);
 Route::get('/docker/{id}', [DockerController::class, 'show']);
 
 Route::get('/docker/{id}/edit', [DockerController::class, 'edit']);
+
+Route::prefix('docker-api')->group(function(){
+    Route::post('/', [DockerController::class, 'create']);
+    Route::put('/{id}', [DockerController::class, 'update']);
+    Route::delete('/{id}', [DockerController::class, 'destroy']);
+});

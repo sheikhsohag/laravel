@@ -59,6 +59,17 @@ services:
     ports:
       - "3307:3306"
 
+  adminer:
+    image: adminer:latest
+    container_name: laravel_adminer
+    restart: always
+    ports:
+        - "8020:8080"
+    depends_on:
+        - db
+    # If you want Adminer to automatically log in to MySQL:
+    # environment:
+    #   ADMINER_DEFAULT_SERVER: db
 # Define the named volumes
 volumes:
   dbdata:
