@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DockerController;
+use App\Http\Controllers\DockerTestController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
@@ -105,7 +106,8 @@ Route::get('/docker/{id}', [DockerController::class, 'show']);
 Route::get('/docker/{id}/edit', [DockerController::class, 'edit']);
 
 Route::prefix('docker-api')->group(function(){
-    Route::post('/', [DockerController::class, 'create']);
-    Route::put('/{id}', [DockerController::class, 'update']);
-    Route::delete('/{id}', [DockerController::class, 'destroy']);
+    Route::get('/', [DockerTestController::class, 'index']);
+    Route::post('/', [DockerTestController::class, 'create']);
+    Route::put('/{id}', [DockerTestController::class, 'update']);
+    Route::delete('/{id}', [DockerTestController::class, 'destroy']);
 });

@@ -12,7 +12,7 @@ class DockerTestController extends Controller
      */
     public function index()
     {
-        //
+        return DockerTest::all();
     }
 
     /**
@@ -20,6 +20,7 @@ class DockerTestController extends Controller
      */
     public function create(Request $request)
     {
+
         $dockerTest = DockerTest::create([
             'name' => $request->name,
             'email' => $request->email,
