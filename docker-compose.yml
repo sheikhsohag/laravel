@@ -1,75 +1,90 @@
 version: '3.8'
 services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: sohag-laravel-app:latest
+        container_name: laravel_app
+        restart: unless-stopped
+        volumes:
+            - .:/var/www/html
+        depends_on:
+            - db
+        environment:
+            DB_CONNECTION: mysql
+            DB_HOST: db
+            DB_PORT: 3306
+            DB_DATABASE: laravel_db
+            DB_USERNAME: laravel_user
+            DB_PASSWORD: supersecretpassword
+        networks:
+            - bookshop_network
+    nextjs_frontend:
+        # Use 'build' instead of 'image'
+        build:
+            # Context should be the Next.js project folder
+            context: ../book-shop
+            # Specify the name of the Dockerfile within that context
+            dockerfile: Dockerfile.nextjs
+        container_name: nextjs_book_shop_prod
+        # !!! REMOVED: No source code volume mount is needed for production !!!
+        ports:
+            - "3000:3000"
+        depends_on:
+            - app
 
-  # 1. Laravel PHP Application Service (app)
-  app:
-    # Build the image using the Dockerfile we created
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: sohag-laravel-app:latest # Tag the resulting image
-    container_name: laravel_app
-    restart: unless-stopped
-    # Mount the source code for development (changes instantly reflected)
-    volumes:
-      - .:/var/www/html
-    # Links the app service to the database service
-    depends_on:
-      - db
-    # Set environment variables for the application
-    environment:
-      # These must match the values in the .env file in the root
-      DB_CONNECTION: mysql
-      DB_HOST: db # IMPORTANT: Use the service name 'db' as the host
-      DB_PORT: 3306
-      DB_DATABASE: laravel_db
-      DB_USERNAME: laravel_user
-      DB_PASSWORD: supersecretpassword
-    # Specify the command to run (PHP-FPM is handled by Dockerfile CMD)
+        networks:
+            - bookshop_network
 
-  # 2. Web Server Service (nginx)
-  nginx:
-    image: nginx:alpine
-    container_name: laravel_nginx
-    restart: unless-stopped
-    # Map port 80 on the container to port 8000 on your local machine
-    ports:
-      - "8000:80"
-    # Mount the application code and custom Nginx config
-    volumes:
-      - .:/var/www/html
-      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - app # Ensure the PHP service is running first
+    nginx:
+        image: nginx:alpine
+        container_name: laravel_nginx
+        restart: unless-stopped
 
-  # 3. Database Service (db)
-  db:
-    image: mysql:8.0
-    container_name: laravel_db_mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: laravel_db
-      MYSQL_USER: laravel_user
-      MYSQL_PASSWORD: supersecretpassword
-      MYSQL_ROOT_PASSWORD: rootpassword
-    # Persist data using a named volume
-    volumes:
-      - dbdata:/var/lib/mysql
-    # Optional: map port 3306 to access DB from host machine (e.g., using MySQL Workbench)
-    ports:
-      - "3307:3306"
+        ports:
+            - "8000:80"
 
-  adminer:
-    image: adminer:latest
-    container_name: laravel_adminer
-    restart: always
-    ports:
-        - "8080:8080"
-    depends_on:
-        - db
-    # If you want Adminer to automatically log in to MySQL:
-    # environment:
-    #   ADMINER_DEFAULT_SERVER: db
-# Define the named volumes
+        volumes:
+            - .:/var/www/html
+            - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+        depends_on:
+            - app
+
+        networks:
+            - bookshop_network
+      # 3. Database Service (db)
+    db:
+        container_name: mysql_database
+        image: mysql:8.0
+        ports:
+            - "33061:3306"
+        # *** এইখানে ইন্ডেন্টেশন চেক করুন ***
+        environment:
+            MYSQL_DATABASE: laravel_db
+            MYSQL_USER: laravel_user
+            MYSQL_PASSWORD: supersecretpassword
+            MYSQL_ROOT_PASSWORD: rootpassword
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - bookshop_network
+        restart: always
+
+    adminer:
+        image: adminer:latest
+        container_name: laravel_adminer
+        restart: always
+        ports:
+            - "8080:8080"
+        depends_on:
+            - db
+networks:
+  bookshop_network:
+    driver: bridge
+
 volumes:
   dbdata:
+
+

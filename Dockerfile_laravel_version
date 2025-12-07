@@ -64,27 +64,52 @@ FROM php_builder AS composer_installer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /var/www/html
-# Copy entire application context so 'artisan' is available.
+# FIX: Copy entire application context so 'artisan' is available.
 COPY . .
 
-# Install PHP dependencies
+# FIX: Add --no-scripts to prevent the post-autoload-dump script (which fails due to missing dev dependencies like Telescope) from running.
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs --no-scripts
 
 # ----------------------------------------------------------------------------------
-# Stage 3: Final Production Image (app) - Renamed from Stage 4
-# This stage is now purely for the Laravel API backend.
+# Stage 3: Node/NPM Frontend Build (node_builder)
+# This stage compiles all JavaScript/CSS assets.
+# ----------------------------------------------------------------------------------
+FROM node:20-alpine AS node_builder
+
+WORKDIR /app
+
+# Copy lock files and install dependencies first (better caching)
+COPY package.json package-lock.json ./
+
+# 1. Install all dependencies strictly according to package-lock.json
+RUN npm ci
+
+# 2. Explicitly install the missing dependency for Rollup/Vite resolution
+RUN npm install laravel-echo pusher-js --no-save
+
+# Copy the rest of the application files (like resources/js/echo.js)
+COPY . .
+
+# 3. Run the build (Vite generates assets in public/build)
+RUN npm run build
+
+# ----------------------------------------------------------------------------------
+# Stage 4: Final Production Image (app)
+# This stage combines the compiled PHP environment and the application files.
 # ----------------------------------------------------------------------------------
 FROM php_builder AS app
 
 # Copy necessary files from the installer stages
 WORKDIR /var/www/html
-# Copy application code (excluding vendor)
+# Copy application code (excluding vendor, node_modules)
 COPY . .
 
 # Copy vendor directory from composer_installer stage
 COPY --from=composer_installer /var/www/html/vendor /var/www/html/vendor
 
-# !!! REMOVED: Frontend build stage and asset copying are no longer needed !!!
+# Copy compiled frontend assets from node_builder stage
+# This single command copies the entire public/build folder, including manifest.json.
+COPY --from=node_builder /app/public/build /var/www/html/public/build
 
 # Set user and group IDs
 ARG PUID=1000
@@ -92,7 +117,7 @@ ARG PGID=1000
 
 # Create system user and set up permissions
 RUN set -eux; \
-    # Safely remove the existing user/group from the base image before re-adding them with specific IDs
+    # FIX: Safely remove the existing user/group from the base image before re-adding them with specific IDs
     deluser www-data 2>/dev/null || true; \
     delgroup www-data 2>/dev/null || true; \
     \
