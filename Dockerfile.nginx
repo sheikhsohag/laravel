@@ -1,0 +1,5 @@
+FROM nginx:alpine
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+# Copy your local config to the image
+COPY ./docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf

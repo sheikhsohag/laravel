@@ -4,7 +4,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        image: sohag-laravel-app:latest
+        # FIXED: Good name
+        image: sheikhsohag/sohag-laravel-app:latest
         container_name: laravel_app
         restart: unless-stopped
         volumes:
@@ -20,47 +21,43 @@ services:
             DB_PASSWORD: supersecretpassword
         networks:
             - bookshop_network
+
     nextjs_frontend:
-        # Use 'build' instead of 'image'
         build:
-            # Context should be the Next.js project folder
             context: ../book-shop
-            # Specify the name of the Dockerfile within that context
             dockerfile: Dockerfile.nextjs
+        # FIXED: Added image name so you can push it to Docker Hub
+        image: sheikhsohag/nextjs-book-shop:latest
         container_name: nextjs_book_shop_prod
-        # !!! REMOVED: No source code volume mount is needed for production !!!
         ports:
             - "3000:3000"
         depends_on:
             - app
-
         networks:
             - bookshop_network
 
     nginx:
-        image: nginx:alpine
+        # FIXED: Changed to 'build' so we can bake the config file inside
+        build:
+            context: .
+            dockerfile: Dockerfile.nginx
+        # FIXED: Unique name for your custom nginx image
+        image: sheikhsohag/custom-nginx:latest
         container_name: laravel_nginx
         restart: unless-stopped
-
         ports:
             - "8000:80"
-
-        volumes:
-            - .:/var/www/html
-            - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
-
         depends_on:
             - app
-
         networks:
             - bookshop_network
-      # 3. Database Service (db)
+
     db:
         container_name: mysql_database
+        # FIXED: Use official image, do not use 'sheikhsohag/' here
         image: mysql:8.0
         ports:
             - "33061:3306"
-        # *** এইখানে ইন্ডেন্টেশন চেক করুন ***
         environment:
             MYSQL_DATABASE: laravel_db
             MYSQL_USER: laravel_user
@@ -73,6 +70,7 @@ services:
         restart: always
 
     adminer:
+        # FIXED: Use official image
         image: adminer:latest
         container_name: laravel_adminer
         restart: always
@@ -82,11 +80,10 @@ services:
             - db
         networks:
             - bookshop_network
+
 networks:
   bookshop_network:
     driver: bridge
 
 volumes:
   dbdata:
-
-
